@@ -34,13 +34,9 @@ body {
   <body>
     
       <div class="container">
-        <div id="map"></div>
-
-    <!-- Async script executes immediately and must be after any DOM elements used in callback. -->
-    <script
-      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBhHezlyeigWOv-mGJVpaq9htqc02kBdoI&callback=initMap&libraries=&v=weekly"
-      async
-    ></script>
+        <div id="result">
+          <!--Position information will be inserted here-->
+      </div>
           <form>
             <div class="mb-3">
               <label for="exampleInputEmail1" class="form-label">Enter Transaction ID</label>
@@ -57,7 +53,7 @@ body {
               <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="search">
               
             </div>
-            <button type="submit" class="btn btn-primary">Submit</button>
+            <button type="submit" onclick="showPosition();" class="btn btn-primary">Submit</button>
           </form>
       </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
@@ -65,32 +61,15 @@ body {
 
 
   <script>
-    function initMap() {
-      const myLatlng = { lat: -25.363, lng: 131.044 };
-      const map = new google.maps.Map(document.getElementById("map"), {
-        zoom: 4,
-        center: myLatlng,
-      });
-      // Create the initial InfoWindow.
-      let infoWindow = new google.maps.InfoWindow({
-        content: "Click the map to get Lat/Lng!",
-        position: myLatlng,
-      });
-      infoWindow.open(map);
-      // Configure the click listener.
-      map.addListener("click", (mapsMouseEvent) => {
-        // Close the current InfoWindow.
-        infoWindow.close();
-        // Create a new InfoWindow.
-        infoWindow = new google.maps.InfoWindow({
-          position: mapsMouseEvent.latLng,
-        });
-        infoWindow.setContent(
-          JSON.stringify(mapsMouseEvent.latLng.toJSON(), null, 2)
-        );
-        infoWindow.open(map);
-      });
+    function showPosition() {
+        if(navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function(position) {
+                var positionInfo = "Your current position is (" + "Latitude: " + position.coords.latitude + ", " + "Longitude: " + position.coords.longitude + ")";
+                document.getElementById("result").innerHTML = positionInfo;
+            });
+        } else {
+            alert("Sorry, your browser does not support HTML5 geolocation.");
+        }
     }
-
-  </script>
+</script>
 </html>
